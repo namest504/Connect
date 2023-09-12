@@ -1,3 +1,8 @@
+spring:
+  config:
+    activate:
+      on-profile: common
+
 server:
   port: 80
   servlet:
