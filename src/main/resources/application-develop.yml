@@ -2,3 +2,15 @@ spring:
   config:
     activate:
       on-profile: develop
+
+  datasource:
+    url: jdbc:h2:mem:connect_post
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
