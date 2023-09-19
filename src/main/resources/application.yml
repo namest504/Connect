@@ -1,6 +1,7 @@
 spring:
   application:
-    name: gateway-server
+    name: gateway-service
+
 eureka:
   client:
     register-with-eureka: true
@@ -8,4 +9,4 @@ eureka:
     service-url:
       defaultZone: ${eureka-server-url}
   instance:
-    hostname: gateway-service
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
