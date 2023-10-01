@@ -22,13 +22,13 @@ public class ImageController {
     // TODO: postId 에 담긴 이미지 Url 리턴하는 엔드포인트
 
     @PostMapping("/")
-    public ResponseEntity<String> uploadImage(MultipartFile multipartFile) {
-        return ResponseEntity.ok(uploadImageService.uploadImage(multipartFile));
+    public ResponseEntity<String> uploadImage(MultipartFile image) {
+        return ResponseEntity.ok(uploadImageService.uploadImage(image));
     }
 
-    @PostMapping("/")
-    public ResponseEntity<List<String>> uploadImages(List<MultipartFile> multipartFiles) {
-        return ResponseEntity.ok(uploadImageService.uploadImages(multipartFiles));
+    @PostMapping("/list")
+    public ResponseEntity<List<String>> uploadImages(List<MultipartFile> image) {
+        return ResponseEntity.ok(uploadImageService.uploadImages(image));
     }
 
 }
