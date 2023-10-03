@@ -31,7 +31,6 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 //	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
 
-
 	compileOnly("org.projectlombok:lombok")
 
 	annotationProcessor("org.projectlombok:lombok")
