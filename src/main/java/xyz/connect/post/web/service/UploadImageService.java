@@ -20,11 +20,12 @@ public class UploadImageService {
     private final S3Util s3Util;
     private final Set<String> validMediaType = new HashSet<>(List.of(
             "image/gif", "image/jfif", "image/pjpeg", "image/jpeg", "image/pjp",
-            "image/jpg", "image/png", "image/bmp", "image/webp", "image/svgz", "image/svg")
+            "image/jpg", "image/png", "image/bmp", "image/webp", "image/svgz", "image/svg",
+            "image/webp")
     );
 
     public String uploadImage(MultipartFile multipartFile) {
-        if (isValidImageType(multipartFile)) {
+        if (!isValidImageType(multipartFile)) {
             throw new PostApiException(ErrorCode.INVALID_MEDIA_TYPE);
         }
 

@@ -16,7 +16,7 @@ public enum ErrorCode {
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "P002", "파일 업로드 용량이 초과되었습니다."),
     INVALID_MEDIA_TYPE(HttpStatus.BAD_REQUEST, "P003", "허용되지 않는 이미지 미디어 타입 입니다."),
     INVALID_API_PARAMETER(HttpStatus.BAD_REQUEST, "Z004", ""), //ExceptionHandler 에서 메시지 작성
-    ;
+    EXCEED_MAX_UPLOAD_COUNT(HttpStatus.BAD_REQUEST, "Z005", "");
 
     private final HttpStatus status;
     private final String code;
