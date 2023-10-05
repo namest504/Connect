@@ -1,7 +1,7 @@
 package xyz.connect.user.custom_exception;
 
 import lombok.Getter;
-import xyz.connect.post.enumeration.ErrorCode;
+import xyz.connect.user.enumeration.ErrorCode;
 
 @Getter
 public class UserApiException extends RuntimeException {

@@ -1,4 +1,4 @@
-package xyz.connect.post.web.controller;
+package xyz.connect.user.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
