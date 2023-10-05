@@ -7,7 +7,8 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import xyz.connect.post.enumeration.ErrorCode;
+import xyz.connect.user.enumeration.ErrorCode;
+import xyz.connect.user.web.model.response.ErrorResponse;
 
 @Slf4j
 @RestControllerAdvice

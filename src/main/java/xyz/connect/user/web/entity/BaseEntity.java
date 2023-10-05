@@ -1,4 +1,4 @@
-package xyz.connect.post.web.entity;
+package xyz.connect.user.web.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

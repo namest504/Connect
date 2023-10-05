@@ -7,7 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
-import xyz.connect.post.filter.AclFilter;
+import xyz.connect.user.filter.AclFilter;
+
 
 @EnableWebSecurity
 @RequiredArgsConstructor
