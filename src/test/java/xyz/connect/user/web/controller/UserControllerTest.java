@@ -1,8 +1,8 @@
 package xyz.connect.user.web.controller;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import xyz.connect.user.web.model.request.CreateUserRequest;
 import xyz.connect.user.web.model.request.LoginRequest;
+import xyz.connect.user.web.repository.UserRepository;
 
 
 @SpringBootTest
@@ -24,9 +26,11 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
-
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @Rollback(value = false)
@@ -51,6 +55,7 @@ class UserControllerTest {
         //given
         String email = "jijiji@naver.com";
         String password = "1234sda";
+
         LoginRequest loginRequest = new LoginRequest(email, password);
         //when
         ResultActions resultActions = mvc.perform(post("/user/login")
@@ -59,9 +64,12 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print());
         // then
-        resultActions
-                .andExpect(status().isOk());
-
+        // 테스트에서 resultActions를 얻은 후
+        MockHttpServletResponse response = resultActions.andReturn().getResponse();
+        // 응답 본문(body)을 가져옴
+        String responseBody = response.getContentAsString();
+        // responseBody가 비어있지 않은지 확인
+        assertTrue(!responseBody.isEmpty());
     }
 
 

@@ -2,6 +2,7 @@ package xyz.connect.user.web.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import xyz.connect.user.web.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
 
@@ -39,6 +41,7 @@ public class UserService {
 
     public String loginUser(LoginRequest loginRequest) {
 
+        log.info("loginRequest ={} ", loginRequest);
         // 이메일 확인
         UserEntity userEntity = userRepository.findByEmail(loginRequest.email())
                 .orElseThrow();
@@ -50,6 +53,7 @@ public class UserService {
 
         //이메일로 토큰 생성
         String token = JwtTokenUtil.createToken(userEntity.getEmail(), key, expireTimeMs);
+        log.info("token ={} ", token);
 
         return token;
 
