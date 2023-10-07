@@ -1,8 +1,0 @@
-spring:
-  config:
-    activate:
-      on-profile: common
-
-server:
-  servlet:
-    context-path: /api/v1/post
