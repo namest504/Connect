@@ -52,7 +52,8 @@ public class UserService {
         }
 
         //이메일로 토큰 생성
-        String token = JwtTokenUtil.createToken(userEntity.getEmail(), key, expireTimeMs);
+        String token = JwtTokenUtil.createToken(userEntity.getUserID(), userEntity.getEmail(), key,
+                expireTimeMs);
         log.info("token ={} ", token);
 
         return token;

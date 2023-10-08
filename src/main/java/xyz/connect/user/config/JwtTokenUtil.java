@@ -17,9 +17,10 @@ public class JwtTokenUtil {
                 .getBody().getExpiration().before(new Date());
     }
 
-    public static String createToken(String email, String key, Long expireTimeMs) {
+    public static String createToken(Long userId, String email, String key, Long expireTimeMs) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
+        claims.put("Sub", userId);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
