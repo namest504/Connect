@@ -2,3 +2,14 @@ spring:
   config:
     activate:
       on-profile: deploy
+
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: ${rds_url}
+      username: ${rds_username}
+      password: ${rds_password}
+
+logging:
+  file:
+    path: /var/log/spring
