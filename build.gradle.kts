@@ -35,18 +35,18 @@ dependencies {
     //spring cloud
 //	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
     // MySQL Database
-    implementation("mysql:mysql-connector-java:8.0.26") // 버전은 변경 가능합니다.
+    implementation("mysql:mysql-connector-java:8.0.26")
     //jwt
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("commons-io:commons-io:2.6")
-
-
+    //eureka-client
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    //lombok
     compileOnly("org.projectlombok:lombok")
-
     annotationProcessor("org.projectlombok:lombok")
-
+    //spring test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
