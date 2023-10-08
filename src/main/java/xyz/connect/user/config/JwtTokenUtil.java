@@ -20,12 +20,12 @@ public class JwtTokenUtil {
     public static String createToken(Long userId, String email, String key, Long expireTimeMs) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
-        claims.put("Sub", userId);
+        claims.put("sub", userId);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
-                .signWith(SignatureAlgorithm.HS256, key)
+                .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
 

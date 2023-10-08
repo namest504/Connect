@@ -42,3 +42,5 @@ application.yml
 application-deploy.yml
 application-develop.yml
 application.properties
+application-local.properties
+application-prod.properties
