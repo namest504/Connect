@@ -1,5 +1,7 @@
 package xyz.connect.post.web.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -8,10 +10,12 @@ import org.springframework.stereotype.Service;
 import xyz.connect.post.custom_exception.PostApiException;
 import xyz.connect.post.enumeration.ErrorCode;
 import xyz.connect.post.web.entity.PostEntity;
+import xyz.connect.post.web.entity.redis.PostViewsEntity;
 import xyz.connect.post.web.model.request.CreatePost;
 import xyz.connect.post.web.model.request.UpdatePost;
 import xyz.connect.post.web.model.response.Post;
 import xyz.connect.post.web.repository.PostRepository;
+import xyz.connect.post.web.repository.redis.PostViewsRedisRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ModelMapper modelMapper;
+    private final PostViewsRedisRepository postViewRedisRepository;
 
     public void createPost(CreatePost createPost) {
         // TODO: UserService API 로 accountId 검증
@@ -64,6 +69,16 @@ public class PostService {
     public void deletePost(Long postId) {
         PostEntity postEntity = findPost(postId);
         postRepository.delete(postEntity);
+    }
+
+    public void increaseViews(Long postId) {
+        findPost(postId); //postId 유효성 검증
+        PostViewsEntity postViewsEntity = postViewRedisRepository.findById(postId).orElse(
+                new PostViewsEntity(postId)
+        );
+
+        postViewsEntity.setViews(postViewsEntity.getViews() + 1);
+        postViewRedisRepository.save(postViewsEntity);
     }
 
     private PostEntity findPost(Long postId) {

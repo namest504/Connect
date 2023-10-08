@@ -1,5 +1,6 @@
 package xyz.connect.post.web.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,6 +47,12 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/views/{postId}")
+    public ResponseEntity<Void> increaseViews(@PathVariable Long postId) {
+        postService.increaseViews(postId);
         return ResponseEntity.noContent().build();
     }
 }
