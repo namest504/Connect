@@ -13,7 +13,7 @@ import xyz.connect.user.web.model.request.LoginRequest;
 import xyz.connect.user.web.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
