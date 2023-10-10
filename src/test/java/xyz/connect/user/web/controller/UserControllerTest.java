@@ -14,8 +14,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import xyz.connect.user.web.model.request.CreateUserRequest;
-import xyz.connect.user.web.model.request.LoginRequest;
+import xyz.connect.user.web.dto.request.CreateUserRequest;
+import xyz.connect.user.web.dto.request.LoginRequest;
 import xyz.connect.user.web.repository.UserRepository;
 
 

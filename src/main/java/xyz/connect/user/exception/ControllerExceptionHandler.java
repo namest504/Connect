@@ -1,4 +1,4 @@
-package xyz.connect.user.custom_exception;
+package xyz.connect.user.exception;
 
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +7,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import xyz.connect.user.enumeration.ErrorCode;
-import xyz.connect.user.web.model.response.ErrorResponse;
 
 @Slf4j
 @RestControllerAdvice
@@ -29,7 +27,7 @@ public class ControllerExceptionHandler {
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining("; "));
 
-        return makeErrorResponseEntity(ErrorCode.INVALID_API_PARAMETER, msg);
+        return makeErrorResponseEntity(ErrorCode.INVALID_API_PARAMETER);
     }
 
     //지원하지 않는 Http method

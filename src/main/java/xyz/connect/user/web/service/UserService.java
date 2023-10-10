@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import xyz.connect.user.config.JwtTokenUtil;
+import xyz.connect.user.web.dto.request.CreateUserRequest;
+import xyz.connect.user.web.dto.request.LoginRequest;
 import xyz.connect.user.web.entity.UserEntity;
-import xyz.connect.user.web.model.request.CreateUserRequest;
-import xyz.connect.user.web.model.request.LoginRequest;
 import xyz.connect.user.web.repository.UserRepository;
 
 @Service

@@ -1,4 +1,4 @@
-package xyz.connect.user.web.model.response;
+package xyz.connect.user.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
