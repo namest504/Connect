@@ -1,4 +1,4 @@
-package xyz.connect.user.enumeration;
+package xyz.connect.user.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ public enum ErrorCode {
     THIRD_PARTY_API_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Z002", ""),
     NOT_SUPPORTED_METHOD(HttpStatus.BAD_REQUEST, "Z003", "지원하지 않는 Http method 입니다."),
 
-    INVALID_API_PARAMETER(HttpStatus.BAD_REQUEST,"Z004" ,"파라미터를 확인해주세요." );
+    INVALID_API_PARAMETER(HttpStatus.BAD_REQUEST, "Z004", "파라미터를 확인해주세요.");
 
     private final HttpStatus status;
     private final String code;
