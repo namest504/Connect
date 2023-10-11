@@ -11,7 +11,7 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     prefer-ip-address: true
-    ip-address: 59.27.180.163
+    ip-address: localhost
 jwt:
   secret:
     key: cHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkgcHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkgcHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkgcHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkg=
