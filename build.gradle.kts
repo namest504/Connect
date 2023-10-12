@@ -46,6 +46,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     //spring test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    //redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
 }
 
 tasks.withType<Test> {
