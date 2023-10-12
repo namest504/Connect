@@ -32,8 +32,6 @@ dependencies {
     implementation("com.h2database:h2")
     //model mapper
     implementation("org.modelmapper:modelmapper:3.1.1")
-    //spring cloud
-//	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
     // MySQL Database
     implementation("mysql:mysql-connector-java:8.0.26")
     //jwt
@@ -48,6 +46,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     //spring test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    //redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
 }
 
 tasks.withType<Test> {

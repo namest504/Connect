@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.connect.user.web.dto.request.CreateUserRequest;
 import xyz.connect.user.web.dto.request.LoginRequest;
+import xyz.connect.user.web.dto.response.LoginResponse;
 import xyz.connect.user.web.service.UserService;
 
 @RestController
@@ -30,7 +31,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
 }
