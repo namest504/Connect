@@ -6,11 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import xyz.connect.user.config.JwtTokenUtil;
+import xyz.connect.user.config.JwtTokenProvider;
 import xyz.connect.user.exception.ErrorCode;
 import xyz.connect.user.exception.UserApiException;
 import xyz.connect.user.web.dto.request.CreateUserRequest;
 import xyz.connect.user.web.dto.request.LoginRequest;
+import xyz.connect.user.web.dto.response.LoginResponse;
 import xyz.connect.user.web.entity.UserEntity;
 import xyz.connect.user.web.repository.UserRepository;
 
@@ -23,6 +24,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Value("${jwt.token.secret}")
     private String key;
@@ -55,23 +58,28 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
-    public String loginUser(LoginRequest loginRequest) {
+    public LoginResponse loginUser(LoginRequest loginRequest) {
 
         // 이메일 확인
         UserEntity userEntity = userRepository.findByEmail(loginRequest.email())
                 .orElseThrow(() -> new UserApiException(ErrorCode.INVALID_API_PARAMETER));
-
         // 비밀번호 확인
         if (!bCryptPasswordEncoder.matches(loginRequest.password(), userEntity.getPassword())) {
             throw new UserApiException(ErrorCode.INVALID_API_PARAMETER);
         }
-
-        //이메일로 토큰 생성
-        String token = JwtTokenUtil.createToken(userEntity.getUserID(), userEntity.getEmail(), key,
+        // 토큰 생성
+        String AccessToken = jwtTokenProvider.createAccssToken(userEntity.getUserID(),
+                userEntity.getEmail(),
+                key,
                 expireTimeMs);
-
-        log.info("token ={} ", token);
-        return token;
+        String RefreshToken = jwtTokenProvider.createRefreshToken(userEntity.getUserID(),
+                userEntity.getEmail(),
+                key,
+                expireTimeMs);
+        log.info("Access token ={} ", AccessToken);
+        log.info("Refresh token = {}", RefreshToken);
+        LoginResponse loginResponse = new LoginResponse(AccessToken, RefreshToken);
+        return loginResponse;
 
     }
 }
