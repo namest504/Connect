@@ -45,5 +45,5 @@ application.properties
 application-prod.properties
 application-local.properties
 
-### build.gradle ###
-build.gradle.kts
+#### build.gradle ###
+#build.gradle.kts

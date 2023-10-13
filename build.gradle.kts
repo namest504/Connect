@@ -40,7 +40,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("commons-io:commons-io:2.6")
     //eureka-client
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
+    // implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
     //lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -48,6 +48,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     //redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    //s3
+    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 }
 
 tasks.withType<Test> {
