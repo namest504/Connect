@@ -50,13 +50,16 @@ public class UserService {
         // password 암호화
         String hashedPassword = bCryptPasswordEncoder.encode(password);
 
-        //user 객체 생성
+        // user 객체 생성
         UserEntity userEntity = UserEntity.builder()
                 .email(email)
                 .password(hashedPassword)
+                .profile_image_url(createUserRequest.profile_image_url())
                 .build();
-        //user save
+
+        // user save
         userRepository.save(userEntity);
+        log.info("User 생성 완료 ={}", userEntity);
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
