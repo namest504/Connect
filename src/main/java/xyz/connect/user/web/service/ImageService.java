@@ -29,7 +29,9 @@ public class ImageService {
             throw new UserApiException(ErrorCode.NOT_SUPPORTED_MEDIA_TYPE);
         }
         try {
-            return s3Util.uploadFile(multipartFile);
+            String image = s3Util.uploadFile(multipartFile);
+            String imageUrl = s3Util.getImageUrl(image);
+            return imageUrl;
         } catch (IOException e) {
             throw new UserApiException(ErrorCode.THIRD_PARTY_API_EXCEPTION);
         }
