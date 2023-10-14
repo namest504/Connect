@@ -43,6 +43,3 @@ application-deploy.yml
 application-develop.yml
 application-prod.properties
 application-local.properties
-
-#### build.gradle ###
-#build.gradle.kts

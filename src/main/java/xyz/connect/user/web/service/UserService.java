@@ -1,6 +1,7 @@
 package xyz.connect.user.web.service;
 
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,5 +82,11 @@ public class UserService {
         LoginResponse loginResponse = new LoginResponse(AccessToken, RefreshToken);
         return loginResponse;
 
+    }
+
+    public Boolean checkEmail(String email) {
+        // 이메일 확인
+        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        return userEntity.isPresent();
     }
 }
