@@ -1,6 +1,7 @@
 package xyz.connect.user.web.service;
 
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,13 +50,16 @@ public class UserService {
         // password 암호화
         String hashedPassword = bCryptPasswordEncoder.encode(password);
 
-        //user 객체 생성
+        // user 객체 생성
         UserEntity userEntity = UserEntity.builder()
                 .email(email)
                 .password(hashedPassword)
+                .profile_image_url(createUserRequest.profile_image_url())
                 .build();
-        //user save
+
+        // user save
         userRepository.save(userEntity);
+        log.info("User 생성 완료 ={}", userEntity);
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
@@ -81,5 +85,11 @@ public class UserService {
         LoginResponse loginResponse = new LoginResponse(AccessToken, RefreshToken);
         return loginResponse;
 
+    }
+
+    public Boolean checkEmail(String email) {
+        // 이메일 확인
+        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        return userEntity.isPresent();
     }
 }

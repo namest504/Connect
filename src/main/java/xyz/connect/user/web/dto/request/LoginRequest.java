@@ -17,7 +17,6 @@ public record LoginRequest(
         @Size(max = 32, message = "32자를 넘을 수 없습니다.")
         String password
 
-        // TODO: MultipartFile image
 ) {
 
 }
