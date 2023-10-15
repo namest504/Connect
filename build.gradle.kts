@@ -33,7 +33,6 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
 	implementation("com.mysql:mysql-connector-j:8.1.0")
 
-
 	compileOnly("org.projectlombok:lombok")
 
 	annotationProcessor("org.projectlombok:lombok")
