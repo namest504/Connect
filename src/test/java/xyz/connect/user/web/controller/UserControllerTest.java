@@ -36,7 +36,7 @@ class UserControllerTest {
         //given
         String email = "fddfdassa@naver.com";
         String password = "1234sda";
-        CreateUserRequest createUserRequest = new CreateUserRequest(email, password);
+        CreateUserRequest createUserRequest = new CreateUserRequest(email, password, null);
 
         String body = objectMapper.writeValueAsString(createUserRequest);
 
