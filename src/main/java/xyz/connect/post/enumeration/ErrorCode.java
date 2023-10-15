@@ -15,8 +15,9 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "P001", "게시글에 대한 권한이 없습니다."),
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "P002", "파일 업로드 용량이 초과되었습니다."),
     INVALID_MEDIA_TYPE(HttpStatus.BAD_REQUEST, "P003", "허용되지 않는 이미지 미디어 타입 입니다."),
-    INVALID_API_PARAMETER(HttpStatus.BAD_REQUEST, "Z004", ""),
-    EXCEED_MAX_UPLOAD_COUNT(HttpStatus.BAD_REQUEST, "Z005", "");
+    INVALID_API_PARAMETER(HttpStatus.BAD_REQUEST, "Z004", ""), //ExceptionHandler 에서 메시지 작성
+    EXCEED_MAX_UPLOAD_COUNT(HttpStatus.BAD_REQUEST, "Z005", ""),
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Z006", "게시글을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;

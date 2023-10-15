@@ -2,14 +2,13 @@ package xyz.connect.post.util;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.UUID;
 
 @Component
 @Slf4j
@@ -21,7 +20,7 @@ public class S3Util {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // MultipartFile 리스트를 받아 해당 파일들을 s3에 업로드
+    // MultipartFile 한 개를 받아 S3에 UUID 파일명으로 업로드 후 해당 UUID 리턴
     public String uploadFile(MultipartFile multipartFile) throws IOException {
         if (multipartFile == null || multipartFile.isEmpty()) return null;
 

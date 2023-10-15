@@ -1,4 +1,28 @@
 spring:
+  application:
+    name: post-service
+
   config:
     activate:
       on-profile: deploy
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${rds_url}
+    username: ${rds_username}
+    password: ${rds_password}
+
+logging:
+  file:
+    path: /var/log/spring
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka_server_url}
+  instance:
+    prefer-ip-address: true
+    ip-address: ${public_ip}
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
