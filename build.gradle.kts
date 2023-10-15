@@ -30,7 +30,9 @@ dependencies {
 	implementation("org.modelmapper:modelmapper:3.1.1")
 	implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
-//	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.3")
+	implementation("com.mysql:mysql-connector-j:8.1.0")
+
 
 	compileOnly("org.projectlombok:lombok")
 
@@ -41,4 +43,5 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	systemProperty("spring.profiles.active", "common, develop")
 }
