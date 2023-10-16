@@ -1,24 +1,22 @@
 package xyz.connect.post.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
-import xyz.connect.post.custom_exception.PostApiException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class S3UtilTest {
 
@@ -34,17 +32,19 @@ class S3UtilTest {
     }
 
     @Test
-    void uploadFiles() {
+    void uploadFiles() throws IOException {
         //given
         String filename = "testFile";
         byte[] content = "file contents.".getBytes();
-        MockMultipartFile wrongFile = new MockMultipartFile("original", filename, "wrongType", content);
+        MockMultipartFile emptyFile = new MockMultipartFile(filename, new byte[0]);
+        MockMultipartFile file = new MockMultipartFile(filename, content);
         when(amazonS3.putObject(any())).thenReturn(new PutObjectResult());
 
         //when
         //then
-        assertThatThrownBy(() -> s3Util.uploadFile(wrongFile))
-                .isInstanceOf(PostApiException.class);
+        assertThat(s3Util.uploadFile(emptyFile)).isNull();
+        assertThat(s3Util.uploadFile(null)).isNull();
+        assertThat(s3Util.uploadFile(file).length()).isGreaterThan(1);
     }
 
     @Test

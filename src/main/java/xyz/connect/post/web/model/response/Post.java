@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Post {
+
     private Long postId;
     private Long accountId;
     private String content;
