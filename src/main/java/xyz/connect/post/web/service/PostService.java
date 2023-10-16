@@ -70,6 +70,11 @@ public class PostService {
 
     public void deletePost(Long postId) {
         PostEntity postEntity = findPost(postId);
+        String[] images = postEntity.getImages().split(";");
+        for (String image : images) {
+            s3Util.deleteFile(image);
+        }
+
         postRepository.delete(postEntity);
     }
 
