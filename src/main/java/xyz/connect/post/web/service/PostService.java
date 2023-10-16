@@ -28,21 +28,23 @@ public class PostService {
     private final PostViewsRedisRepository postViewRedisRepository;
     private final S3Util s3Util;
 
-    public void createPost(CreatePost createPost) {
+    public Post createPost(CreatePost createPost) {
         // TODO: UserService API 로 accountId 검증
-        PostEntity postEntity = new PostEntity();
+        PostEntity postEntity = modelMapper.map(createPost, PostEntity.class);
         postEntity.setAccountId(1L); // TODO: 추후 삭제
         postEntity.setContent(createPost.content());
-        postEntity.setImages(joinToStringAtSemicolon(createPost.imageUrl()));
 
-        postRepository.save(postEntity);
+        PostEntity resultEntity = postRepository.save(postEntity);
+        Post post = modelMapper.map(resultEntity, Post.class);
         log.info("Post 업로드 완료: " + postEntity);
+
+        return post;
     }
 
     public Post getPost(Long postId) {
         PostEntity postEntity = findPost(postId);
         Post post = modelMapper.map(postEntity, Post.class);
-        post.setImages(imageStringToList(postEntity.getImages()));
+//        post.setImages(imageStringToList(postEntity.getImages()));
         log.info("Post 조회 완료: " + post);
         return post;
     }
@@ -52,7 +54,7 @@ public class PostService {
         List<Post> posts = new ArrayList<>();
         for (var entity : postEntityList) {
             Post post = modelMapper.map(entity, Post.class);
-            post.setImages(imageStringToList(entity.getImages()));
+//            post.setImages(imageStringToList(entity.getImages()));
             posts.add(post);
         }
 
@@ -60,12 +62,16 @@ public class PostService {
         return posts;
     }
 
-    public void updatePost(Long postId, UpdatePost updatePost) {
+    public Post updatePost(Long postId, UpdatePost updatePost) {
         PostEntity postEntity = findPost(postId);
         postEntity.setContent(updatePost.content());
-        postEntity.setImages(joinToStringAtSemicolon(updatePost.imageUrl()));
+        if (updatePost.images() != null && !updatePost.images().isEmpty()) {
+            postEntity.setImages(String.join(";", updatePost.images()));
+        }
 
-        postRepository.save(postEntity);
+        PostEntity resultEntity = postRepository.save(postEntity);
+        Post post = modelMapper.map(resultEntity, Post.class);
+        return post;
     }
 
     public void deletePost(Long postId) {
@@ -91,25 +97,5 @@ public class PostService {
     private PostEntity findPost(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new PostApiException(ErrorCode.POST_NOT_FOUND));
-    }
-
-    private String joinToStringAtSemicolon(List<String> stringList) {
-        var sb = new StringBuilder();
-        if (stringList != null) {
-            for (var s : stringList) {
-                sb.append(s).append(";");
-            }
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
-    }
-
-    private List<String> imageStringToList(String images) {
-        List<String> imageList = new ArrayList<>();
-        for (String image : images.split(";")) {
-            imageList.add(s3Util.getImageUrl(image));
-        }
-
-        return imageList;
     }
 }
