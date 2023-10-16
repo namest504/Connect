@@ -1,6 +1,7 @@
 package xyz.connect.post.custom_exception;
 
 import com.amazonaws.AmazonServiceException;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import xyz.connect.post.enumeration.ErrorCode;
 import xyz.connect.post.web.model.response.ErrorResponse;
-
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -49,7 +48,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(AmazonServiceException.class)
     public ResponseEntity<ErrorResponse> amazonServiceExceptionHandler(AmazonServiceException e) {
         log.warn("[AmazonS3 API Exception] " + e.getMessage());
-        return makeErrorResponseEntity(ErrorCode.THIRD_PARTY_API_EXCEPTION, e.getMessage());
+        return makeErrorResponseEntity(ErrorCode.THIRD_PARTY_API_EXCEPTION);
     }
 
     //지원하지 않는 Http method
