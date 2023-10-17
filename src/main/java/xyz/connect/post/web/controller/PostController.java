@@ -27,7 +27,7 @@ public class PostController {
 
     @PostMapping("/")
     public ResponseEntity<Post> createPost(@RequestBody CreatePost createPost,
-            HttpServletRequest request`) {
+            HttpServletRequest request) {
         return ResponseEntity.ok(postService.createPost(createPost, request));
     }
 
@@ -45,13 +45,13 @@ public class PostController {
 
     @PatchMapping("/{postId}")
     public ResponseEntity<Post> updatePost(@PathVariable Long postId,
-            @RequestBody UpdatePost updatePost) {
-        return ResponseEntity.ok(postService.updatePost(postId, updatePost));
+            @RequestBody UpdatePost updatePost, HttpServletRequest request) {
+        return ResponseEntity.ok(postService.updatePost(postId, updatePost, request));
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, HttpServletRequest request) {
+        postService.deletePost(postId, request);
         return ResponseEntity.noContent().build();
     }
 

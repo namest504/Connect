@@ -31,7 +31,7 @@ public class PostService {
 
     public Post createPost(CreatePost createPost, HttpServletRequest request) {
         PostEntity postEntity = modelMapper.map(createPost, PostEntity.class);
-        postEntity.setAccountId(Long.parseLong(request.getHeader("User-Pk")));
+        postEntity.setAccountId(getAccountIdFromHeader(request));
         postEntity.setContent(createPost.content());
 
         PostEntity resultEntity = postRepository.save(postEntity);
@@ -44,7 +44,6 @@ public class PostService {
     public Post getPost(Long postId) {
         PostEntity postEntity = findPost(postId);
         Post post = modelMapper.map(postEntity, Post.class);
-//        post.setImages(imageStringToList(postEntity.getImages()));
         log.info("Post 조회 완료: " + post);
         return post;
     }
@@ -54,7 +53,6 @@ public class PostService {
         List<Post> posts = new ArrayList<>();
         for (var entity : postEntityList) {
             Post post = modelMapper.map(entity, Post.class);
-//            post.setImages(imageStringToList(entity.getImages()));
             posts.add(post);
         }
 
@@ -62,8 +60,12 @@ public class PostService {
         return posts;
     }
 
-    public Post updatePost(Long postId, UpdatePost updatePost) {
+    public Post updatePost(Long postId, UpdatePost updatePost, HttpServletRequest request) {
         PostEntity postEntity = findPost(postId);
+        if (postEntity.getAccountId() != getAccountIdFromHeader(request)) {
+            throw new PostApiException(ErrorCode.UNAUTHORIZED);
+        }
+
         postEntity.setContent(updatePost.content());
         if (updatePost.images() != null && !updatePost.images().isEmpty()) {
             postEntity.setImages(String.join(";", updatePost.images()));
@@ -74,8 +76,12 @@ public class PostService {
         return post;
     }
 
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, HttpServletRequest request) {
         PostEntity postEntity = findPost(postId);
+        if (postEntity.getAccountId() != getAccountIdFromHeader(request)) {
+            throw new PostApiException(ErrorCode.UNAUTHORIZED);
+        }
+
         String[] images = postEntity.getImages().split(";");
         for (String image : images) {
             s3Util.deleteFile(image);
@@ -97,5 +103,9 @@ public class PostService {
     private PostEntity findPost(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new PostApiException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    private long getAccountIdFromHeader(HttpServletRequest request) {
+        return Long.parseLong(request.getHeader("User-Pk"));
     }
 }
