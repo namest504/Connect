@@ -1,5 +1,6 @@
 package xyz.connect.post.web.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,9 @@ public class PostService {
     private final PostViewsRedisRepository postViewRedisRepository;
     private final S3Util s3Util;
 
-    public Post createPost(CreatePost createPost) {
-        // TODO: UserService API 로 accountId 검증
+    public Post createPost(CreatePost createPost, HttpServletRequest request) {
         PostEntity postEntity = modelMapper.map(createPost, PostEntity.class);
-        postEntity.setAccountId(1L); // TODO: 추후 삭제
+        postEntity.setAccountId(Long.parseLong(request.getHeader("User-Pk")));
         postEntity.setContent(createPost.content());
 
         PostEntity resultEntity = postRepository.save(postEntity);

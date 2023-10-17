@@ -1,5 +1,6 @@
 package xyz.connect.post.web.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,8 +26,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/")
-    public ResponseEntity<Post> createPost(@RequestBody CreatePost createPost) {
-        return ResponseEntity.ok(postService.createPost(createPost));
+    public ResponseEntity<Post> createPost(@RequestBody CreatePost createPost,
+            HttpServletRequest request`) {
+        return ResponseEntity.ok(postService.createPost(createPost, request));
     }
 
     @GetMapping("/{postId}")
