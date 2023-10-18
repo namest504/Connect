@@ -1,22 +1,26 @@
 package com.lim1t.springcloudgateway.filter;
 
-import com.lim1t.springcloudgateway.config.JwtFilterConfig;
+import com.lim1t.springcloudgateway.filter.JwtTokenAuthenticationFilter.Config;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import lombok.Getter;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class JwtTokenAuthenticationFilter extends AbstractGatewayFilterFactory<JwtFilterConfig> {
+public class JwtTokenAuthenticationFilter extends AbstractGatewayFilterFactory<Config> {
 
     public JwtTokenAuthenticationFilter() {
-        super(JwtFilterConfig.class);
+        super(Config.class);
     }
 
     @Override
-    public GatewayFilter apply(JwtFilterConfig config) {
+    public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
 
             String token = exchange.getRequest()
@@ -44,5 +48,16 @@ public class JwtTokenAuthenticationFilter extends AbstractGatewayFilterFactory<J
 
             return chain.filter(exchange);
         };
+    }
+
+    @Getter
+    public static class Config {
+
+        private final Key secretKey;
+
+        public Config(String secretKey) {
+            byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+            this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+        }
     }
 }
