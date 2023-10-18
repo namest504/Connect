@@ -50,6 +50,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     //s3
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+    //swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
     //kafka
     implementation ("org.springframework.kafka:spring-kafka")
     testImplementation ("org.springframework.kafka:spring-kafka-test")

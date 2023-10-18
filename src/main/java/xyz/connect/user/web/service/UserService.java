@@ -39,7 +39,7 @@ public class UserService {
     private String PURPOSE_AUTH = "AUTH";
     private String PURPOSE_WELCOME = "WELCOME";
 
-    public void createUser(CreateUserRequest createUserRequest) {
+    public String createUser(CreateUserRequest createUserRequest) {
         // email 길이 제한
         String email = createUserRequest.email();
         if (email.length() > 512) {
@@ -68,17 +68,19 @@ public class UserService {
         userRepository.save(userEntity);
         log.info("User 생성 완료 ={}", userEntity);
 
+
         kafkaProducerService.sendMessage(MailRequest.builder()
                 .receiverEmail(userEntity.getEmail())
                 .purpose(PURPOSE_AUTH)
                 .build());
+
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
 
         // 이메일 확인
         UserEntity userEntity = userRepository.findByEmail(loginRequest.email())
-                .orElseThrow(() -> new UserApiException(ErrorCode.INVALID_API_PARAMETER));
+                .orElseThrow(() -> new UserApiException(ErrorCode.NO_THAT_USER));
         // 비밀번호 확인
         if (!bCryptPasswordEncoder.matches(loginRequest.password(), userEntity.getPassword())) {
             throw new UserApiException(ErrorCode.INVALID_API_PARAMETER);
@@ -102,7 +104,7 @@ public class UserService {
     public Boolean checkEmail(String email) {
         // 이메일 확인
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-        return userEntity.isPresent();
+        return !userEntity.isPresent();
     }
 
     @Transactional
