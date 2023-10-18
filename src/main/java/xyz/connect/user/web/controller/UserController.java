@@ -75,5 +75,9 @@ public class UserController {
         return ResponseEntity.ok(checkEmailResponse);
     }
 
+    @PostMapping("/confirm/auth-mail")
+    public ResponseEntity<String> confirmAuthMail(@RequestBody String email) {
+        return ResponseEntity.ok(userService.confirmAuthMail(email));
+    }
 
 }

@@ -7,12 +7,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.connect.user.config.JwtTokenProvider;
 import xyz.connect.user.exception.ErrorCode;
 import xyz.connect.user.exception.UserApiException;
 import xyz.connect.user.web.dto.request.CreateUserRequest;
 import xyz.connect.user.web.dto.request.LoginRequest;
+import xyz.connect.user.web.dto.request.MailRequest;
 import xyz.connect.user.web.dto.response.LoginResponse;
+import xyz.connect.user.web.entity.AccountType;
 import xyz.connect.user.web.entity.UserEntity;
 import xyz.connect.user.web.repository.UserRepository;
 
@@ -28,9 +31,13 @@ public class UserService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final KafkaProducerService kafkaProducerService;
+
     @Value("${jwt.token.secret}")
     private String key;
     private Long expireTimeMs = 1000 * 60 * 60L; //1시간
+    private String PURPOSE_AUTH = "AUTH";
+    private String PURPOSE_WELCOME = "WELCOME";
 
     public String createUser(CreateUserRequest createUserRequest) {
         // email 길이 제한
@@ -60,7 +67,13 @@ public class UserService {
         // user save
         userRepository.save(userEntity);
         log.info("User 생성 완료 ={}", userEntity);
-        return userEntity.getEmail();
+
+
+        kafkaProducerService.sendMessage(MailRequest.builder()
+                .receiverEmail(userEntity.getEmail())
+                .purpose(PURPOSE_AUTH)
+                .build());
+
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
@@ -92,5 +105,18 @@ public class UserService {
         // 이메일 확인
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         return !userEntity.isPresent();
+    }
+
+    @Transactional
+    public String confirmAuthMail(String email) {
+        UserEntity userEntity = userRepository.findByEmailAndAccount_type(email, AccountType.UNCHEKED)
+                .orElseThrow(() -> new UserApiException(ErrorCode.NON_EXIST_USER));
+
+        userEntity.updateAccountType(AccountType.USER);
+        kafkaProducerService.sendMessage(MailRequest.builder()
+                .receiverEmail(userEntity.getEmail())
+                .purpose(PURPOSE_WELCOME)
+                .build());
+        return userEntity.getAccount_type().name();
     }
 }

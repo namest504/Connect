@@ -52,6 +52,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
     //swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    //kafka
+    implementation ("org.springframework.kafka:spring-kafka")
+    testImplementation ("org.springframework.kafka:spring-kafka-test")
 }
 
 tasks.withType<Test> {

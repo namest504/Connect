@@ -20,6 +20,9 @@ public enum ErrorCode {
     NO_THAT_USER(HttpStatus.NOT_FOUND, "Z200", "해당 이메일 유저가 없습니다."),
     WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "Z201", "비밀번호가 틀렸습니다.");
 
+    //MAIL
+    NON_EXIST_USER(HttpStatus.NOT_FOUND, "Z300", "존재하지 않는 유저 입니다.")
+    ;
 
     private final HttpStatus status;
     private final String code;
