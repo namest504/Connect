@@ -41,4 +41,9 @@ public class UserController {
     public ResponseEntity<Boolean> check(@RequestBody String email) {
         return ResponseEntity.ok(userService.checkEmail(email));
     }
+
+    @PostMapping("/confirm/auth-mail")
+    public ResponseEntity<String> confirmAuthMail(@RequestBody String email) {
+        return ResponseEntity.ok(userService.confirmAuthMail(email));
+    }
 }

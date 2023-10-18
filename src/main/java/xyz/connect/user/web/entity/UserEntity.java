@@ -43,5 +43,7 @@ public class UserEntity {
     @Column(nullable = true)
     private String status;
 
-
+    public void updateAccountType(AccountType account_type) {
+        this.account_type = account_type;
+    }
 }
