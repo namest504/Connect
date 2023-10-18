@@ -8,20 +8,34 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Service
 public class MailService {
 
+    private final RestTemplate restTemplate;
     private final JavaMailSender emailSender;
     private final MailRedisRepository mailRedisRepository;
     private final Map<MailPurpose, MailFormStrategy> strategies;
 
-    public MailService(JavaMailSender emailSender, MailRedisRepository mailRedisRepository) {
+    private final String CLIENT_NAME_HEADER = "client-name";
+
+    @Value("${spring.application.name}")
+    private String CLIENT_NAME;
+
+    public MailService(RestTemplate restTemplate, JavaMailSender emailSender, MailRedisRepository mailRedisRepository) {
+        this.restTemplate = restTemplate;
         this.emailSender = emailSender;
         this.mailRedisRepository = mailRedisRepository;
         this.strategies = new HashMap<>();
@@ -54,15 +68,32 @@ public class MailService {
         mailRedisRepository.findById(cert)
                 .ifPresentOrElse(
                         mail -> {
-                            requestAuthAPI(mail);
+                            requestAuthAPI(mail.getEmail());
                             mailRedisRepository.delete(mail);
                             },
-                        () ->
-                                new MailApiException(ErrorCode.NO_CERTIFICATION)
+                        () ->{
+                            throw new MailApiException(ErrorCode.NO_CERTIFICATION);
+                        }
+
                 );
     }
 
-    private void requestAuthAPI(final Mail mail) {
-        // todo : 인증 완료된 유저 정보 수정 API (인증서버)
+    public void requestAuthAPI(final String mail) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(CLIENT_NAME_HEADER, CLIENT_NAME);
+        HttpEntity<String> request = new HttpEntity<>(mail, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                "lb://user-service/api/v1/user/confirm/auth-mail",
+                HttpMethod.POST,
+                request,
+                String.class
+        );
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            log.info(response.getBody());
+        } else {
+            log.info("code : {}", response.getStatusCode());
+        }
     }
 }
