@@ -68,12 +68,12 @@ public class UserService {
         userRepository.save(userEntity);
         log.info("User 생성 완료 ={}", userEntity);
 
-
         kafkaProducerService.sendMessage(MailRequest.builder()
                 .receiverEmail(userEntity.getEmail())
                 .purpose(PURPOSE_AUTH)
                 .build());
 
+        return userEntity.getEmail();
     }
 
     public LoginResponse loginUser(LoginRequest loginRequest) {
@@ -109,7 +109,8 @@ public class UserService {
 
     @Transactional
     public String confirmAuthMail(String email) {
-        UserEntity userEntity = userRepository.findByEmailAndAccount_type(email, AccountType.UNCHEKED)
+        UserEntity userEntity = userRepository.findByEmailAndAccount_type(email,
+                        AccountType.UNCHEKED)
                 .orElseThrow(() -> new UserApiException(ErrorCode.NON_EXIST_USER));
 
         userEntity.updateAccountType(AccountType.USER);
