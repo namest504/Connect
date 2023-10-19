@@ -30,7 +30,11 @@ public class UserEntity {
     private String email;
 
     @Column(nullable = true)
+    private String nickName;
+
+    @Column(nullable = true)
     private String password;
+
 
     @Column(nullable = true)
     private String profile_image_url;
@@ -43,5 +47,7 @@ public class UserEntity {
     @Column(nullable = true)
     private String status;
 
-
+    public void updateAccountType(AccountType account_type) {
+        this.account_type = account_type;
+    }
 }

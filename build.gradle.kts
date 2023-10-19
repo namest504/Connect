@@ -33,7 +33,7 @@ dependencies {
     //model mapper
     implementation("org.modelmapper:modelmapper:3.1.1")
     // MySQL Database
-    implementation("mysql:mysql-connector-java:8.0.26")
+    implementation("mysql:mysql-connector-java:8.0.33")
     //jwt
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
@@ -50,6 +50,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     //s3
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+    //swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    //kafka
+    implementation("org.springframework.kafka:spring-kafka")
+    testImplementation("org.springframework.kafka:spring-kafka-test")
 }
 
 tasks.withType<Test> {
