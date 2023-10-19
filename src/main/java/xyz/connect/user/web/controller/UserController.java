@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.connect.user.web.dto.request.CreateUserRequest;
 import xyz.connect.user.web.dto.request.LoginRequest;
 import xyz.connect.user.web.dto.response.CheckEmailResponse;
+import xyz.connect.user.web.dto.response.CheckNickNameResponse;
 import xyz.connect.user.web.dto.response.CreateUserResponse;
 import xyz.connect.user.web.dto.response.LoginResponse;
 import xyz.connect.user.web.service.UserService;
@@ -75,8 +76,25 @@ public class UserController {
         return ResponseEntity.ok(checkEmailResponse);
     }
 
+    @Operation(summary = "닉네임 중복확인")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청 성공, 해당 nickName 사용가능하면 true 반환")
+    }
+    )
+    @GetMapping("/checkNickName")
+    public ResponseEntity<CheckNickNameResponse> checkNickName(
+            @Schema(description = "nickName", example = "suhoon")
+            @RequestParam String nickName) {
+        Boolean is_true = userService.checkNickName(nickName);
+        CheckNickNameResponse checkNickNameResponse = new CheckNickNameResponse(is_true);
+        return ResponseEntity.ok(checkNickNameResponse);
+
+    }
+
+
     @PostMapping("/confirm/auth-mail")
     public ResponseEntity<String> confirmAuthMail(@RequestBody String email) {
+
         return ResponseEntity.ok(userService.confirmAuthMail(email));
     }
 

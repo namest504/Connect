@@ -14,6 +14,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmail(String email);
 
+    Optional<UserEntity> findByNickName(String nickName);
+
     @Query("select u from UserEntity u where u.email = :email and u.account_type = :accountType")
-    Optional<UserEntity> findByEmailAndAccount_type(@Param("email") String email,@Param("accountType") AccountType accountType);
+    Optional<UserEntity> findByEmailAndAccount_type(@Param("email") String email,
+            @Param("accountType") AccountType accountType);
 }
