@@ -49,17 +49,25 @@ public class UserService {
         if (userRepository.findByEmail(createUserRequest.email()).isPresent()) {
             throw new UserApiException(ErrorCode.CONFLICT);
         }
+
+        // 닉네임 중복 확인
+        if (userRepository.findByNickName(createUserRequest.nickName()).isPresent()) {
+            throw new UserApiException(ErrorCode.CONFLICT);
+        }
+
         // password 길이 제한
         String password = createUserRequest.password();
         if (password.length() > 32) {
             throw new UserApiException(ErrorCode.INVALID_API_PARAMETER);
         }
+
         // password 암호화
         String hashedPassword = bCryptPasswordEncoder.encode(password);
 
         // user 객체 생성
         UserEntity userEntity = UserEntity.builder()
                 .email(email)
+                .nickName(createUserRequest.nickName())
                 .password(hashedPassword)
                 .profile_image_url(createUserRequest.profile_image_url())
                 .build();
@@ -119,5 +127,11 @@ public class UserService {
                 .purpose(PURPOSE_WELCOME)
                 .build());
         return userEntity.getAccount_type().name();
+    }
+
+    public Boolean checkNickName(String nickName) {
+        // 닉네임 중복확인
+        Optional<UserEntity> userEntity = userRepository.findByNickName(nickName);
+        return !userEntity.isPresent();
     }
 }

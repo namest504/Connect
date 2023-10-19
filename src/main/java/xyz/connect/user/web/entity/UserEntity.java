@@ -30,7 +30,11 @@ public class UserEntity {
     private String email;
 
     @Column(nullable = true)
+    private String nickName;
+
+    @Column(nullable = true)
     private String password;
+
 
     @Column(nullable = true)
     private String profile_image_url;

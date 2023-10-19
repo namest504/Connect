@@ -16,6 +16,12 @@ public record CreateUserRequest(
 
         @NotEmpty
         @JsonProperty
+        @Schema(description = "nickName", example = "suhoon")
+        @Size(max = 32, message = "32자를 넘을 수 없습니다.")
+        String nickName,
+
+        @NotEmpty
+        @JsonProperty
         @Schema(description = "password", example = "141414")
         @Size(max = 32, message = "32자를 넘을 수 없습니다.")
         String password,
