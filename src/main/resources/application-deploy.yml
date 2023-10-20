@@ -12,6 +12,11 @@ spring:
     username: ${rds_username}
     password: ${rds_password}
 
+  data:
+    redis:
+      host: ${redis_host}
+      port: ${redis_port}
+
 logging:
   file:
     path: /var/log/spring

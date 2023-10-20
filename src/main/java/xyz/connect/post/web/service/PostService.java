@@ -28,15 +28,14 @@ public class PostService {
     private final PostViewsRedisRepository postViewRedisRepository;
     private final S3Util s3Util;
 
-    public Post createPost(CreatePost createPost) {
-        // TODO: UserService API 로 accountId 검증
+    public Post createPost(CreatePost createPost, long accountId) {
         PostEntity postEntity = modelMapper.map(createPost, PostEntity.class);
-        postEntity.setAccountId(1L); // TODO: 추후 삭제
+        postEntity.setAccountId(accountId);
         postEntity.setContent(createPost.content());
 
         PostEntity resultEntity = postRepository.save(postEntity);
         Post post = modelMapper.map(resultEntity, Post.class);
-        log.info("Post 업로드 완료: " + postEntity);
+        log.info("Post 등록 완료: " + postEntity);
 
         return post;
     }
@@ -44,7 +43,6 @@ public class PostService {
     public Post getPost(Long postId) {
         PostEntity postEntity = findPost(postId);
         Post post = modelMapper.map(postEntity, Post.class);
-//        post.setImages(imageStringToList(postEntity.getImages()));
         log.info("Post 조회 완료: " + post);
         return post;
     }
@@ -54,7 +52,6 @@ public class PostService {
         List<Post> posts = new ArrayList<>();
         for (var entity : postEntityList) {
             Post post = modelMapper.map(entity, Post.class);
-//            post.setImages(imageStringToList(entity.getImages()));
             posts.add(post);
         }
 
@@ -62,8 +59,12 @@ public class PostService {
         return posts;
     }
 
-    public Post updatePost(Long postId, UpdatePost updatePost) {
+    public Post updatePost(Long postId, UpdatePost updatePost, long accountId) {
         PostEntity postEntity = findPost(postId);
+        if (postEntity.getAccountId() != accountId) {
+            throw new PostApiException(ErrorCode.UNAUTHORIZED);
+        }
+
         postEntity.setContent(updatePost.content());
         if (updatePost.images() != null && !updatePost.images().isEmpty()) {
             postEntity.setImages(String.join(";", updatePost.images()));
@@ -71,17 +72,23 @@ public class PostService {
 
         PostEntity resultEntity = postRepository.save(postEntity);
         Post post = modelMapper.map(resultEntity, Post.class);
+        log.info("Post 수정 완료: " + post);
         return post;
     }
 
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, long accountId) {
         PostEntity postEntity = findPost(postId);
+        if (postEntity.getAccountId() != accountId) {
+            throw new PostApiException(ErrorCode.UNAUTHORIZED);
+        }
+
         String[] images = postEntity.getImages().split(";");
         for (String image : images) {
-            s3Util.deleteFile(image);
+            s3Util.deleteFile(image); // TODO: 2023-10-18 이벤트 방식으로 변경
         }
 
         postRepository.delete(postEntity);
+        log.info(postEntity.getPostId() + "번 Post 삭제 완료");
     }
 
     public void increaseViews(Long postId) {
@@ -94,8 +101,8 @@ public class PostService {
         postViewRedisRepository.save(postViewsEntity);
     }
 
-    private PostEntity findPost(Long postId) {
+    public PostEntity findPost(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new PostApiException(ErrorCode.POST_NOT_FOUND));
+                .orElseThrow(() -> new PostApiException(ErrorCode.NOT_FOUND));
     }
 }

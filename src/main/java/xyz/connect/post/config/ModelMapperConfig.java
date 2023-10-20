@@ -10,8 +10,10 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import xyz.connect.post.util.S3Util;
+import xyz.connect.post.web.entity.CommentEntity;
 import xyz.connect.post.web.entity.PostEntity;
 import xyz.connect.post.web.model.request.CreatePost;
+import xyz.connect.post.web.model.response.Comment;
 import xyz.connect.post.web.model.response.Post;
 
 @Configuration
@@ -27,6 +29,8 @@ public class ModelMapperConfig {
                 .setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.addConverter(postEntityToPost());
         modelMapper.addConverter(createPostToPostEntity());
+        modelMapper.addConverter(commentEntityToComment());
+
         return modelMapper;
     }
 
@@ -39,6 +43,7 @@ public class ModelMapperConfig {
                 post.setAccountId(source.getAccountId());
                 post.setContent(source.getContent());
                 post.setImages(imageStringToList(source.getImages()));
+                post.setCreatedAt(source.getCreatedAt());
                 return post;
             }
         };
@@ -60,6 +65,21 @@ public class ModelMapperConfig {
         };
     }
 
+    private Converter<CommentEntity, Comment> commentEntityToComment() {
+        return new AbstractConverter<>() {
+            @Override
+            protected Comment convert(CommentEntity source) {
+                Comment comment = new Comment();
+                comment.setCommentId(source.getCommentId());
+                comment.setPostId(source.getPost().getPostId());
+                comment.setAccountId(source.getAccountId());
+                comment.setContent(source.getContent());
+                comment.setCreatedAt(source.getCreatedAt());
+                return comment;
+            }
+        };
+    }
+
     private List<String> imageStringToList(String images) {
         List<String> imageList = new ArrayList<>();
         for (String image : images.split(";")) {
@@ -68,15 +88,4 @@ public class ModelMapperConfig {
 
         return imageList;
     }
-
-//    private String joinToStringAtSemicolon(List<String> stringList) {
-//        var sb = new StringBuilder();
-//        if (stringList != null) {
-//            for (var s : stringList) {
-//                sb.append(s).append(";");
-//            }
-//        }
-//        sb.deleteCharAt(sb.length() - 1);
-//        return sb.toString();
-//    }
 }
