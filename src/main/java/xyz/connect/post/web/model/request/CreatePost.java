@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public record CreatePost(
-        @NotEmpty
+        @NotEmpty(message = "필수 항목입니다.")
         @Size(max = 512, message = "512자를 넘을 수 없습니다.")
         String content,
 
