@@ -1,6 +1,5 @@
 package xyz.connect.post.web.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +28,14 @@ public class PostService {
     private final PostViewsRedisRepository postViewRedisRepository;
     private final S3Util s3Util;
 
-    public Post createPost(CreatePost createPost, HttpServletRequest request) {
+    public Post createPost(CreatePost createPost, long accountId) {
         PostEntity postEntity = modelMapper.map(createPost, PostEntity.class);
-        postEntity.setAccountId(getAccountIdFromHeader(request));
+        postEntity.setAccountId(accountId);
         postEntity.setContent(createPost.content());
 
         PostEntity resultEntity = postRepository.save(postEntity);
         Post post = modelMapper.map(resultEntity, Post.class);
-        log.info("Post 업로드 완료: " + postEntity);
+        log.info("Post 등록 완료: " + postEntity);
 
         return post;
     }
@@ -60,9 +59,9 @@ public class PostService {
         return posts;
     }
 
-    public Post updatePost(Long postId, UpdatePost updatePost, HttpServletRequest request) {
+    public Post updatePost(Long postId, UpdatePost updatePost, long accountId) {
         PostEntity postEntity = findPost(postId);
-        if (postEntity.getAccountId() != getAccountIdFromHeader(request)) {
+        if (postEntity.getAccountId() != accountId) {
             throw new PostApiException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -73,21 +72,23 @@ public class PostService {
 
         PostEntity resultEntity = postRepository.save(postEntity);
         Post post = modelMapper.map(resultEntity, Post.class);
+        log.info("Post 수정 완료: " + post);
         return post;
     }
 
-    public void deletePost(Long postId, HttpServletRequest request) {
+    public void deletePost(Long postId, long accountId) {
         PostEntity postEntity = findPost(postId);
-        if (postEntity.getAccountId() != getAccountIdFromHeader(request)) {
+        if (postEntity.getAccountId() != accountId) {
             throw new PostApiException(ErrorCode.UNAUTHORIZED);
         }
 
         String[] images = postEntity.getImages().split(";");
         for (String image : images) {
-            s3Util.deleteFile(image);
+            s3Util.deleteFile(image); // TODO: 2023-10-18 이벤트 방식으로 변경
         }
 
         postRepository.delete(postEntity);
+        log.info(postEntity.getPostId() + "번 Post 삭제 완료");
     }
 
     public void increaseViews(Long postId) {
@@ -100,12 +101,8 @@ public class PostService {
         postViewRedisRepository.save(postViewsEntity);
     }
 
-    private PostEntity findPost(Long postId) {
+    public PostEntity findPost(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new PostApiException(ErrorCode.POST_NOT_FOUND));
-    }
-
-    private long getAccountIdFromHeader(HttpServletRequest request) {
-        return Long.parseLong(request.getHeader("User-Pk"));
+                .orElseThrow(() -> new PostApiException(ErrorCode.NOT_FOUND));
     }
 }
