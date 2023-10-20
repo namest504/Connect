@@ -18,12 +18,6 @@ public class ImageController {
 
     private final UploadImageService uploadImageService;
 
-//    @PostMapping("/image")
-//    public ResponseEntity<UploadedImage> uploadImage(@Valid UploadImage uploadImage) { // TODO: 2023-10-18 Validation 추가
-////        return ResponseEntity.ok(uploadImageService.uploadImage(image));
-//        return null;
-//    }
-
     @PostMapping("/images")
     public ResponseEntity<List<UploadedImage>> uploadImages(@Valid UploadImages uploadImages) {
         return ResponseEntity.ok(uploadImageService.uploadImages(uploadImages));
