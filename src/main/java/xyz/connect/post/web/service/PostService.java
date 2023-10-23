@@ -15,6 +15,7 @@ import xyz.connect.post.web.entity.redis.PostViewsEntity;
 import xyz.connect.post.web.model.request.CreatePost;
 import xyz.connect.post.web.model.request.UpdatePost;
 import xyz.connect.post.web.model.response.Post;
+import xyz.connect.post.web.model.response.PostDetail;
 import xyz.connect.post.web.repository.PostRepository;
 import xyz.connect.post.web.repository.redis.PostViewsRedisRepository;
 
@@ -40,18 +41,30 @@ public class PostService {
         return post;
     }
 
-    public Post getPost(Long postId) {
+    // 댓글 리스트가 포함된 PostDetail 을 반환
+    public PostDetail getPost(Long postId) {
         PostEntity postEntity = findPost(postId);
-        Post post = modelMapper.map(postEntity, Post.class);
-        log.info("Post 조회 완료: " + post);
-        return post;
+        PostDetail postDetail = modelMapper.map(postEntity, PostDetail.class);
+
+        // getCachedViews() 와 increaseCachedViews() 실행 간격 사이에 스케쥴러가 실행되어
+        // 캐싱된 조회수가 사라질 가능성이 존재한다. 이 경우 조회수 증가는 무시된다.
+        // 하지만 매우 적은 확률이고, Post 조회수는 오차가 발생하더라도 큰 문제가 없다.
+        // 따라서 검증과정을 거치지 않는 것이 효율적이라 판단
+        long cachedViews = getCachedViews(postEntity);
+        postDetail.setViews(cachedViews);
+        increaseCachedViews(postEntity);
+        log.info("PostDetail 조회 완료: " + postDetail);
+        return postDetail;
     }
 
+    // 댓글이 포함되지 않은 Post 를 반환
     public List<Post> getPosts(Pageable pageable) {
         List<PostEntity> postEntityList = postRepository.findAll(pageable).getContent();
         List<Post> posts = new ArrayList<>();
-        for (var entity : postEntityList) {
-            Post post = modelMapper.map(entity, Post.class);
+        for (var postEntity : postEntityList) {
+            Post post = modelMapper.map(postEntity, Post.class);
+            long cachedViews = getCachedViews(postEntity);
+            post.setViews(cachedViews);
             posts.add(post);
         }
 
@@ -91,18 +104,37 @@ public class PostService {
         log.info(postEntity.getPostId() + "번 Post 삭제 완료");
     }
 
-    public void increaseViews(Long postId) {
-        findPost(postId); //postId 유효성 검증
-        PostViewsEntity postViewsEntity = postViewRedisRepository.findById(postId).orElse(
-                new PostViewsEntity(postId)
-        );
+    public PostEntity findPost(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new PostApiException(ErrorCode.NOT_FOUND));
+    }
 
+    // 1. 캐싱된 조회수를 가져온다.
+    //   1) 캐싱된 조회수가 존재하면 리턴한다.
+    //   2) 캐싱된 조회수가 없으면 캐싱 후 전달받은 PostEntity 의 조회수를 리턴한다.
+    private long getCachedViews(PostEntity postEntity) {
+        PostViewsEntity postViewsEntity = getPostViewsEntityOrNew(postEntity.getPostId());
+
+        long cachedViews = postViewsEntity.getViews();
+        if (cachedViews < 1) {
+            cachedViews = postEntity.getViews();
+        }
+
+        postViewsEntity.setViews(cachedViews);
+        postViewRedisRepository.save(postViewsEntity);
+
+        return cachedViews;
+    }
+
+    // 캐싱된 조회수를 1 증가시킨다
+    private void increaseCachedViews(PostEntity postEntity) {
+        PostViewsEntity postViewsEntity = getPostViewsEntityOrNew(postEntity.getPostId());
         postViewsEntity.setViews(postViewsEntity.getViews() + 1);
         postViewRedisRepository.save(postViewsEntity);
     }
 
-    public PostEntity findPost(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new PostApiException(ErrorCode.NOT_FOUND));
+    // new PostViewsEntity 는 views == 0
+    private PostViewsEntity getPostViewsEntityOrNew(long postId) {
+        return postViewRedisRepository.findById(postId).orElse(new PostViewsEntity(postId));
     }
 }
