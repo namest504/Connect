@@ -44,6 +44,7 @@ public class ModelMapperConfig {
                 post.setContent(source.getContent());
                 post.setImages(imageStringToList(source.getImages()));
                 post.setCreatedAt(source.getCreatedAt());
+                post.setViews(source.getViews());
                 return post;
             }
         };

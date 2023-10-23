@@ -29,6 +29,9 @@ public class PostEntity extends BaseEntity {
     @Column(columnDefinition = "text")
     private String images; // 공백없이 ; 를 구분자로 하는 url 목록
 
+    @Column(columnDefinition = "BIGINT")
+    private Long views = 0L;
+
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     List<CommentEntity> comments = new ArrayList<>();
 }
