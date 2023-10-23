@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash
+@RedisHash(value = "postViews")
 @Getter
 @Setter
 public class PostViewsEntity {
