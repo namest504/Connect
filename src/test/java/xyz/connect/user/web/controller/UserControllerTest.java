@@ -36,7 +36,8 @@ class UserControllerTest {
         //given
         String email = "fddfdassa@naver.com";
         String password = "1234sda";
-        CreateUserRequest createUserRequest = new CreateUserRequest(email, password, null);
+        String nickName = "suhoon";
+        CreateUserRequest createUserRequest = new CreateUserRequest(email, nickName, password, null);
 
         String body = objectMapper.writeValueAsString(createUserRequest);
 
@@ -45,7 +46,7 @@ class UserControllerTest {
                         post("/sign-up")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(body))
-                .andExpect(status().is(204));
+                .andExpect(status().is(200));
 
         //then
 

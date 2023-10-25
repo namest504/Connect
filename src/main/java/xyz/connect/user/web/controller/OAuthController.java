@@ -43,7 +43,7 @@ public class OAuthController {
     )
     @PostMapping("/loginKakao")
     public ResponseEntity<LoginResponse> loginKakao(@RequestParam String code) {
-        LoginResponse loginResponse = oAuthService.loginKakao(code);
+        LoginResponse loginResponse = oAuthService.loginKakao(code, "KakaoRequestInfoHelper");
         return ResponseEntity.ok(loginResponse);
     }
 }

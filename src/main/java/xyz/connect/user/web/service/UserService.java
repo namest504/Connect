@@ -70,6 +70,7 @@ public class UserService {
                 .nickName(createUserRequest.nickName())
                 .password(hashedPassword)
                 .profile_image_url(createUserRequest.profile_image_url())
+                .account_type(AccountType.UNCHEKED)
                 .build();
 
         // user save
