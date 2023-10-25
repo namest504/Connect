@@ -17,11 +17,5 @@ redis-url: localhost
 
 eureka:
   client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: ${eureka-server-url}
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    prefer-ip-address: true
-    ip-address: localhost
+    register-with-eureka: false
+    fetch-registry: false
