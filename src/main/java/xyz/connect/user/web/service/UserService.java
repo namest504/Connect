@@ -95,11 +95,11 @@ public class UserService {
             throw new UserApiException(ErrorCode.INVALID_API_PARAMETER);
         }
         // 토큰 생성
-        String AccessToken = jwtTokenProvider.createAccssToken(userEntity.getUserID(),
+        String AccessToken = jwtTokenProvider.createAccssToken(userEntity.getId(),
                 userEntity.getEmail(),
                 key,
                 expireTimeMs);
-        String RefreshToken = jwtTokenProvider.createRefreshToken(userEntity.getUserID(),
+        String RefreshToken = jwtTokenProvider.createRefreshToken(userEntity.getId(),
                 userEntity.getEmail(),
                 key,
                 expireTimeMs);

@@ -47,14 +47,14 @@ public class OAuthService {
         Optional<UserEntity> userOptional = userRepository.findByEmail(oAuthInfoParam.getEmail());
         if (userOptional.isPresent()) {
             UserEntity userEntity = userOptional.get();
-            return userEntity.getUserID();
+            return userEntity.getId();
         } else {
             UserEntity newUser = new UserEntity();
             newUser.setEmail(oAuthInfoParam.getEmail());
             newUser.setAccount_type(AccountType.KAKAO);
             newUser.setProfile_image_url(oAuthInfoParam.getImage());
             userRepository.save(newUser);
-            return newUser.getUserID();
+            return newUser.getId();
         }
     }
 
