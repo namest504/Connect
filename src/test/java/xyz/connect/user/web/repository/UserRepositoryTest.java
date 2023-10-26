@@ -75,13 +75,13 @@ public class UserRepositoryTest {
                 .id(1L)
                 .email("suhoon@naver.com")
                 .nickName("suhoon")
-                .account_type(AccountType.UNCHEKED)
+                .account_type(AccountType.UNCHECKED)
                 .build();
 
         //when
         UserEntity user = userRepository.save(userEntity);
         Optional<UserEntity> result = userRepository.findByEmailAndAccount_type("suhoon@naver.com",
-                AccountType.UNCHEKED);
+                AccountType.UNCHECKED);
         //then
         Assertions.assertThat(result.get().getEmail()).isEqualTo("suhoon@naver.com");
     }

@@ -71,7 +71,7 @@ public class UserService {
                 .nickName(createUserRequest.nickName())
                 .password(hashedPassword)
                 .profile_image_url(createUserRequest.profile_image_url())
-                .account_type(AccountType.UNCHEKED)
+                .account_type(AccountType.UNCHECKED)
                 .build();
 
         // user save
@@ -120,7 +120,7 @@ public class UserService {
 
     public String confirmAuthMail(String email) {
         UserEntity userEntity = userRepository.findByEmailAndAccount_type(email,
-                        AccountType.UNCHEKED)
+                        AccountType.UNCHECKED)
                 .orElseThrow(() -> new UserApiException(ErrorCode.NON_EXIST_USER));
 
         userEntity.updateAccountType(AccountType.USER);

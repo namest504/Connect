@@ -38,7 +38,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
             @ApiResponse(responseCode = "400", description = "이메일 이나 비밀번호 사이즈 오류", content = @Content),
-            @ApiResponse(responseCode = "409", description = "중복된 이메일 입니다", content = @Content)}
+            @ApiResponse(responseCode = "409", description = "중복된 이메일 혹은 닉네임 입니다", content = @Content)}
     )
     @PostMapping("/sign-up")
     public ResponseEntity<CreateUserResponse> signUp(
