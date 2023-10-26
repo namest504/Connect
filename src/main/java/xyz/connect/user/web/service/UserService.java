@@ -21,6 +21,7 @@ import xyz.connect.user.web.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class UserService {
 
@@ -116,7 +117,7 @@ public class UserService {
         return !userEntity.isPresent();
     }
 
-    @Transactional
+
     public String confirmAuthMail(String email) {
         UserEntity userEntity = userRepository.findByEmailAndAccount_type(email,
                         AccountType.UNCHEKED)
