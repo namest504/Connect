@@ -91,12 +91,20 @@ public class UserServiceTest {
 
     @Test
     void confirmAuthMail_로이메일인증확인을할수있다() {
+
+        //given
+        //when
+        String accountType = userService.confirmAuthMail("suhoon@naver.com");
+
+        //then
+        Assertions.assertThat(accountType).isEqualTo("USER");
     }
 
     @Test
     void checkNickName_로닉네임중복확인을할수있다() {
         //given
         String nickname = "suhoon";
+        BDDMockito.doNothing().when(kafkaProducerService).sendMessage(any());
         //when
         boolean is_true = userService.checkNickName(nickname);
         //then
