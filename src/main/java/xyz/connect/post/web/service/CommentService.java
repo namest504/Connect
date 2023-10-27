@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import xyz.connect.post.custom_exception.PostApiException;
 import xyz.connect.post.enumeration.ErrorCode;
@@ -24,14 +25,17 @@ public class CommentService {
     private final PostService postService;
     private final ModelMapper modelMapper;
 
-    public List<Comment> getComments(Long postId) {
+    public List<Comment> getComments(Long postId, Pageable pageable) {
         PostEntity postEntity = postService.findPost(postId);
+        List<CommentEntity> commentEntityList = commentRepository.findByPost(postEntity, pageable)
+                .getContent();
         List<Comment> commentList = new ArrayList<>();
-        for (CommentEntity entity : postEntity.getComments()) {
+
+        for (CommentEntity entity : commentEntityList) {
             commentList.add(modelMapper.map(entity, Comment.class));
         }
 
-        log.info(postEntity.getPostId() + "번 Post의 Comment " + commentList.size() + "개 조회 완료");
+        log.info(postId + "번 Post의 Comment " + commentList.size() + "개 조회 완료");
         return commentList;
     }
 

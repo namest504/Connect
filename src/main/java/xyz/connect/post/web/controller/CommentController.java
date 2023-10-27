@@ -3,6 +3,9 @@ package xyz.connect.post.web.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +30,10 @@ public class CommentController {
     private final AccountInfoUtil accountInfoUtil;
 
     @GetMapping("")
-    public ResponseEntity<List<Comment>> getComment(Long postId) {
-        return ResponseEntity.ok(commentService.getComments(postId));
+    public ResponseEntity<List<Comment>> getComment(Long postId,
+            @PageableDefault(sort = "commentId", direction = Direction.DESC)
+            Pageable pageable) {
+        return ResponseEntity.ok(commentService.getComments(postId, pageable));
     }
 
     @PostMapping("")

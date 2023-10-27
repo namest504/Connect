@@ -15,7 +15,6 @@ import xyz.connect.post.web.entity.redis.PostViewsEntity;
 import xyz.connect.post.web.model.request.CreatePost;
 import xyz.connect.post.web.model.request.UpdatePost;
 import xyz.connect.post.web.model.response.Post;
-import xyz.connect.post.web.model.response.PostDetail;
 import xyz.connect.post.web.repository.PostRepository;
 import xyz.connect.post.web.repository.redis.PostViewsRedisRepository;
 
@@ -41,20 +40,19 @@ public class PostService {
         return post;
     }
 
-    // 댓글 리스트가 포함된 PostDetail 을 반환
-    public PostDetail getPost(Long postId) {
+    public Post getPost(Long postId) {
         PostEntity postEntity = findPost(postId);
-        PostDetail postDetail = modelMapper.map(postEntity, PostDetail.class);
+        Post post = modelMapper.map(postEntity, Post.class);
 
         // getCachedViews() 와 increaseCachedViews() 실행 간격 사이에 스케쥴러가 실행되어
         // 캐싱된 조회수가 사라질 가능성이 존재한다. 이 경우 조회수 증가는 무시된다.
         // 하지만 매우 적은 확률이고, Post 조회수는 오차가 발생하더라도 큰 문제가 없다.
         // 따라서 검증과정을 거치지 않는 것이 효율적이라 판단
         long cachedViews = getCachedViews(postEntity);
-        postDetail.setViews(cachedViews);
+        post.setViews(cachedViews);
         increaseCachedViews(postEntity);
-        log.info("PostDetail 조회 완료: " + postDetail);
-        return postDetail;
+        log.info("Post 조회 완료: " + post);
+        return post;
     }
 
     // 댓글이 포함되지 않은 Post 를 반환
