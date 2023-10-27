@@ -9,6 +9,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import xyz.connect.post.enumeration.ErrorCode;
 import xyz.connect.post.web.model.response.ErrorResponse;
@@ -43,6 +44,12 @@ public class ControllerExceptionHandler {
                 .collect(Collectors.joining("; "));
 
         return makeErrorResponseEntity(ErrorCode.INVALID_API_PARAMETER, msg);
+    }
+
+    //API 요청 파라미터 타입 위반
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> typeMismatchExceptionHandler() {
+        return makeErrorResponseEntity(ErrorCode.TYPE_MISMATCH);
     }
 
     @ExceptionHandler(AmazonServiceException.class)
