@@ -72,6 +72,7 @@ public class UserService {
                 .password(hashedPassword)
                 .profile_image_url(createUserRequest.profile_image_url())
                 .account_type(AccountType.UNCHECKED)
+                .status("OFFLINE")
                 .build();
 
         // user save

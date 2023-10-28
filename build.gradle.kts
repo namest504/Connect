@@ -44,8 +44,6 @@ dependencies {
     //lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
-    //spring test
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     //redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     //s3
@@ -54,6 +52,9 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
     //kafka
     implementation("org.springframework.kafka:spring-kafka")
+
+    //test
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
 }
 
