@@ -22,35 +22,14 @@ public class SecurityConfig {
         return http
                 .formLogin().disable()
                 .logout().disable()
-
-//                .headers().frameOptions().sameOrigin()
-//                .and()
-
-//                .cors().configurationSource(corsConfigSource())
-//                .and()
                 .cors().disable()
-
                 .csrf().disable()
-
                 .authorizeHttpRequests()
                 .anyRequest().permitAll()
                 .and()
-
-//                .exceptionHandling().authenticationEntryPoint(new InvalidJwtEntryPoint())
-//                .and()
                 .addFilterBefore(aclFilter, ChannelProcessingFilter.class)
                 .build();
     }
 
-//    private UrlBasedCorsConfigurationSource corsConfigSource() {
-//        CorsConfiguration corsConfig = new CorsConfiguration();
-//        corsConfig.setAllowCredentials(true);
-//        corsConfig.setAllowedHeaders(Arrays.asList("Content-Type", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-//        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-//        corsConfig.addAllowedOriginPattern("*");
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", corsConfig);
-//        return source;
-//    }
+
 }

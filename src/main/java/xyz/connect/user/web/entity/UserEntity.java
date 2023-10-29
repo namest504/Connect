@@ -17,14 +17,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
-@Table(name = "ACCOUNT")
+@Table(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userID;
+    private Long id;
 
     @Column(nullable = false)
     private String email;

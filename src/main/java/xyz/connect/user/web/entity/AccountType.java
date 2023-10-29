@@ -5,6 +5,6 @@ public enum AccountType {
     KAKAO,
 
     USER,
-    UNCHEKED,
+    UNCHECKED,
 
 }

@@ -21,6 +21,7 @@ import xyz.connect.user.web.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class UserService {
 
@@ -70,6 +71,8 @@ public class UserService {
                 .nickName(createUserRequest.nickName())
                 .password(hashedPassword)
                 .profile_image_url(createUserRequest.profile_image_url())
+                .account_type(AccountType.UNCHECKED)
+                .status("OFFLINE")
                 .build();
 
         // user save
@@ -94,11 +97,11 @@ public class UserService {
             throw new UserApiException(ErrorCode.INVALID_API_PARAMETER);
         }
         // 토큰 생성
-        String AccessToken = jwtTokenProvider.createAccssToken(userEntity.getUserID(),
+        String AccessToken = jwtTokenProvider.createAccssToken(userEntity.getId(),
                 userEntity.getEmail(),
                 key,
                 expireTimeMs);
-        String RefreshToken = jwtTokenProvider.createRefreshToken(userEntity.getUserID(),
+        String RefreshToken = jwtTokenProvider.createRefreshToken(userEntity.getId(),
                 userEntity.getEmail(),
                 key,
                 expireTimeMs);
@@ -115,10 +118,10 @@ public class UserService {
         return !userEntity.isPresent();
     }
 
-    @Transactional
+
     public String confirmAuthMail(String email) {
         UserEntity userEntity = userRepository.findByEmailAndAccount_type(email,
-                        AccountType.UNCHEKED)
+                        AccountType.UNCHECKED)
                 .orElseThrow(() -> new UserApiException(ErrorCode.NON_EXIST_USER));
 
         userEntity.updateAccountType(AccountType.USER);

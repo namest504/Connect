@@ -1,5 +1,6 @@
 package xyz.connect.user.web.service.OAuth;
 
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,14 @@ public class OAuthService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final KakaoRequestInfoHelper kakaoRequestInfoHelper;
+    private final Map<String, RequestInfoHelper> requestInfoHelpers;
 
     @Value("${jwt.token.secret}")
     private String key;
     private Long expireTimeMs = 1000 * 60 * 60L; //1시간
 
-    public LoginResponse loginKakao(String code) {
-        OAuthInfoParam oAuthInfoParam = kakaoRequestInfoHelper.request(code);
+    public LoginResponse loginKakao(String code, String requestHelper) {
+        OAuthInfoParam oAuthInfoParam = requestInfoHelpers.get(requestHelper).request(code);
         log.info("oAuthInfoParam image ={}", oAuthInfoParam.getImage());
         Long userId = findOrCreateUser(oAuthInfoParam);
         LoginResponse loginResponse = getLoginResponse(userId, oAuthInfoParam);
@@ -46,14 +47,14 @@ public class OAuthService {
         Optional<UserEntity> userOptional = userRepository.findByEmail(oAuthInfoParam.getEmail());
         if (userOptional.isPresent()) {
             UserEntity userEntity = userOptional.get();
-            return userEntity.getUserID();
+            return userEntity.getId();
         } else {
             UserEntity newUser = new UserEntity();
             newUser.setEmail(oAuthInfoParam.getEmail());
             newUser.setAccount_type(AccountType.KAKAO);
             newUser.setProfile_image_url(oAuthInfoParam.getImage());
             userRepository.save(newUser);
-            return newUser.getUserID();
+            return newUser.getId();
         }
     }
 
