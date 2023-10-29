@@ -10,6 +10,7 @@ public enum ErrorCode {
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Z001", "Unknown Server Error"),
     THIRD_PARTY_API_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Z002", "내부 API 오류. 관리자에게 문의하세요."),
     NOT_SUPPORTED_METHOD(HttpStatus.BAD_REQUEST, "Z003", "지원하지 않는 Http method 입니다."),
+    NOT_ALLOWED_ACCESS(HttpStatus.BAD_REQUEST, "Z004", "잘못된 접근입니다."),
 
     //Post API
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "P001", "리소스에 대한 권한이 없습니다."),
