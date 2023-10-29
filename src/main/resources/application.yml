@@ -10,7 +10,7 @@ spring:
 
 server:
   servlet:
-    context-path: /api/v1/post
+    context-path: /api/v1
 
 cloud:
   aws:
