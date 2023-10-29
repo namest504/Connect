@@ -19,6 +19,7 @@ import xyz.connect.post.web.entity.redis.PostViewsEntity;
 import xyz.connect.post.web.model.request.CreatePost;
 import xyz.connect.post.web.model.request.UpdatePost;
 import xyz.connect.post.web.model.response.Post;
+import xyz.connect.post.web.model.response.PostDetail;
 import xyz.connect.post.web.repository.PostRepository;
 import xyz.connect.post.web.repository.redis.PostViewsRedisRepository;
 
@@ -44,7 +45,8 @@ public class PostService {
         return post;
     }
 
-    public Post getPost(Long postId) {
+    // 댓글 리스트가 포함된 PostDetail 을 반환
+    public PostDetail getPost(Long postId) {
         PostEntity postEntity = findPost(postId);
         Post post = modelMapper.map(postEntity, Post.class);
 
