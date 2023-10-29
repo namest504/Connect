@@ -19,7 +19,6 @@ import xyz.connect.post.util.AccountInfoUtil;
 import xyz.connect.post.web.model.request.CreatePost;
 import xyz.connect.post.web.model.request.UpdatePost;
 import xyz.connect.post.web.model.response.Post;
-import xyz.connect.post.web.model.response.PostDetail;
 import xyz.connect.post.web.service.PostService;
 
 @RestController
@@ -37,7 +36,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDetail> getPost(@PathVariable Long postId) {
+    public ResponseEntity<Post> getPost(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.getPost(postId));
     }
 
