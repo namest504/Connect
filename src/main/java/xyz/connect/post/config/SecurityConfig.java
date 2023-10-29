@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.session.DisableEncodeUrlFilter;
 import xyz.connect.post.filter.AclFilter;
+import xyz.connect.post.filter.AuthFilter;
+import xyz.connect.post.filter.FilterExceptionHandler;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -15,6 +17,8 @@ import xyz.connect.post.filter.AclFilter;
 public class SecurityConfig {
 
     private final AclFilter aclFilter;
+    private final FilterExceptionHandler filterExceptionHandler;
+    private final AuthFilter authFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,7 +41,9 @@ public class SecurityConfig {
 
 //                .exceptionHandling().authenticationEntryPoint(new InvalidJwtEntryPoint())
 //                .and()
-                .addFilterBefore(aclFilter, ChannelProcessingFilter.class)
+                .addFilterBefore(filterExceptionHandler, DisableEncodeUrlFilter.class)
+                .addFilterAfter(aclFilter, FilterExceptionHandler.class)
+                .addFilterAfter(authFilter, AclFilter.class)
                 .build();
     }
 
