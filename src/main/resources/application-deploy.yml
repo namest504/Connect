@@ -1,6 +1,6 @@
 spring:
   application:
-    name: post-service
+    name: mail-service
 
   config:
     activate:
