@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: gateway-service
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka-server-url}
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+    ip-address: localhost
+jwt:
+  secret:
+    key: cHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkgcHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkgcHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkgcHJlIG9uIGNvbm5lY3Qgand0IHNlY3JleSBrZXkg=
