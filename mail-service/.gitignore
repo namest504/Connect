@@ -1,0 +1,6 @@
+/.idea/
+/out/
+/src/main/generated/
+/.gradle/
+/build/
+/src/main/resources/application-dev.yml

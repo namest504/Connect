@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: mail-service
+
+  config:
+    activate:
+      on-profile: local
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail-username}
+    password: ${mail-password}
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: mail-group-1
+
+redis-url: localhost
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
